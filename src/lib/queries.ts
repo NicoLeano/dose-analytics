@@ -130,11 +130,15 @@ export async function getMonthlyPnlByRange(range: DateRange): Promise<MonthlyPnl
     throw new Error('Supabase not configured')
   }
 
+  // Convert to first-of-month dates for proper comparison with the month column (stored as date)
+  const startMonth = range.start.slice(0, 7) + '-01'
+  const endMonth = range.end.slice(0, 7) + '-01'
+
   const { data, error } = await supabase
     .from('fct_monthly_pnl')
     .select('*')
-    .gte('month', range.start.slice(0, 7)) // YYYY-MM format
-    .lte('month', range.end.slice(0, 7))
+    .gte('month', startMonth)
+    .lte('month', endMonth)
     .order('month', { ascending: false })
 
   if (error) throw error
