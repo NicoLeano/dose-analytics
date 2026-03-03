@@ -441,13 +441,14 @@ export async function getPnlByPeriod(
   period: Period,
   customRange?: DateRange
 ): Promise<MonthlyPnl[]> {
+  // For monthly view, use the simple query that was working before
+  if (period === 'monthly') {
+    return getMonthlyPnl(12)
+  }
+
   const range = period === 'custom' && customRange
     ? customRange
     : getDateRangeForPeriod(period)
-
-  if (period === 'monthly') {
-    return getMonthlyPnlByRange(range)
-  }
 
   // For other periods, fetch daily data and aggregate
   const dailyData = await getDailyPnlByRange(range)
