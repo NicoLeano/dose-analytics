@@ -10,6 +10,7 @@ export interface MonthlyPnl {
   revenue_ex_iva: number
   iva_collected: number
   orders: number
+  cogs: number
   meta_ad_spend: number
   aov: number
 }
@@ -23,6 +24,7 @@ export interface DailyPnl {
   revenue_ex_iva: number
   iva_collected: number
   orders: number
+  cogs: number
   meta_ad_spend: number
 }
 
@@ -187,7 +189,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
   const result: MonthlyPnl[] = []
   weekMap.forEach((platformMap, weekKey) => {
     let totalGross = 0, totalDiscounts = 0, totalNet = 0, totalExIva = 0
-    let totalIva = 0, totalOrders = 0, totalAdSpend = 0
+    let totalIva = 0, totalOrders = 0, totalCogs = 0, totalAdSpend = 0
 
     platformMap.forEach((rows, platform) => {
       const gross = rows.reduce((sum, r) => sum + r.gross_revenue, 0)
@@ -196,6 +198,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
       const exIva = rows.reduce((sum, r) => sum + r.revenue_ex_iva, 0)
       const iva = rows.reduce((sum, r) => sum + r.iva_collected, 0)
       const orders = rows.reduce((sum, r) => sum + r.orders, 0)
+      const cogs = rows.reduce((sum, r) => sum + r.cogs, 0)
       const adSpend = rows.reduce((sum, r) => sum + r.meta_ad_spend, 0)
 
       result.push({
@@ -207,6 +210,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
         revenue_ex_iva: exIva,
         iva_collected: iva,
         orders,
+        cogs,
         meta_ad_spend: adSpend,
         aov: orders > 0 ? gross / orders : 0,
       })
@@ -217,6 +221,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
       totalExIva += exIva
       totalIva += iva
       totalOrders += orders
+      totalCogs += cogs
       totalAdSpend += adSpend
     })
 
@@ -229,6 +234,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
       revenue_ex_iva: totalExIva,
       iva_collected: totalIva,
       orders: totalOrders,
+      cogs: totalCogs,
       meta_ad_spend: totalAdSpend,
       aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
@@ -259,7 +265,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
   const result: MonthlyPnl[] = []
   quarterMap.forEach((platformMap, quarterKey) => {
     let totalGross = 0, totalDiscounts = 0, totalNet = 0, totalExIva = 0
-    let totalIva = 0, totalOrders = 0, totalAdSpend = 0
+    let totalIva = 0, totalOrders = 0, totalCogs = 0, totalAdSpend = 0
 
     platformMap.forEach((rows, platform) => {
       const gross = rows.reduce((sum, r) => sum + r.gross_revenue, 0)
@@ -268,6 +274,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
       const exIva = rows.reduce((sum, r) => sum + r.revenue_ex_iva, 0)
       const iva = rows.reduce((sum, r) => sum + r.iva_collected, 0)
       const orders = rows.reduce((sum, r) => sum + r.orders, 0)
+      const cogs = rows.reduce((sum, r) => sum + r.cogs, 0)
       const adSpend = rows.reduce((sum, r) => sum + r.meta_ad_spend, 0)
 
       result.push({
@@ -279,6 +286,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
         revenue_ex_iva: exIva,
         iva_collected: iva,
         orders,
+        cogs,
         meta_ad_spend: adSpend,
         aov: orders > 0 ? gross / orders : 0,
       })
@@ -289,6 +297,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
       totalExIva += exIva
       totalIva += iva
       totalOrders += orders
+      totalCogs += cogs
       totalAdSpend += adSpend
     })
 
@@ -301,6 +310,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
       revenue_ex_iva: totalExIva,
       iva_collected: totalIva,
       orders: totalOrders,
+      cogs: totalCogs,
       meta_ad_spend: totalAdSpend,
       aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
@@ -330,7 +340,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
   const result: MonthlyPnl[] = []
   yearMap.forEach((platformMap, yearKey) => {
     let totalGross = 0, totalDiscounts = 0, totalNet = 0, totalExIva = 0
-    let totalIva = 0, totalOrders = 0, totalAdSpend = 0
+    let totalIva = 0, totalOrders = 0, totalCogs = 0, totalAdSpend = 0
 
     platformMap.forEach((rows, platform) => {
       const gross = rows.reduce((sum, r) => sum + r.gross_revenue, 0)
@@ -339,6 +349,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
       const exIva = rows.reduce((sum, r) => sum + r.revenue_ex_iva, 0)
       const iva = rows.reduce((sum, r) => sum + r.iva_collected, 0)
       const orders = rows.reduce((sum, r) => sum + r.orders, 0)
+      const cogs = rows.reduce((sum, r) => sum + r.cogs, 0)
       const adSpend = rows.reduce((sum, r) => sum + r.meta_ad_spend, 0)
 
       result.push({
@@ -350,6 +361,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
         revenue_ex_iva: exIva,
         iva_collected: iva,
         orders,
+        cogs,
         meta_ad_spend: adSpend,
         aov: orders > 0 ? gross / orders : 0,
       })
@@ -360,6 +372,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
       totalExIva += exIva
       totalIva += iva
       totalOrders += orders
+      totalCogs += cogs
       totalAdSpend += adSpend
     })
 
@@ -372,6 +385,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
       revenue_ex_iva: totalExIva,
       iva_collected: totalIva,
       orders: totalOrders,
+      cogs: totalCogs,
       meta_ad_spend: totalAdSpend,
       aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
@@ -394,7 +408,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
   const result: MonthlyPnl[] = []
   dateMap.forEach((rows, date) => {
     let totalGross = 0, totalDiscounts = 0, totalNet = 0, totalExIva = 0
-    let totalIva = 0, totalOrders = 0, totalAdSpend = 0
+    let totalIva = 0, totalOrders = 0, totalCogs = 0, totalAdSpend = 0
 
     rows.forEach((row) => {
       result.push({
@@ -406,6 +420,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
         revenue_ex_iva: row.revenue_ex_iva,
         iva_collected: row.iva_collected,
         orders: row.orders,
+        cogs: row.cogs,
         meta_ad_spend: row.meta_ad_spend,
         aov: row.orders > 0 ? row.gross_revenue / row.orders : 0,
       })
@@ -416,6 +431,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
       totalExIva += row.revenue_ex_iva
       totalIva += row.iva_collected
       totalOrders += row.orders
+      totalCogs += row.cogs
       totalAdSpend += row.meta_ad_spend
     })
 
@@ -428,6 +444,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
       revenue_ex_iva: totalExIva,
       iva_collected: totalIva,
       orders: totalOrders,
+      cogs: totalCogs,
       meta_ad_spend: totalAdSpend,
       aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })

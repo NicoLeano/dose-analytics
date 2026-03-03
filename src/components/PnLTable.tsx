@@ -53,29 +53,40 @@ export function PnLTable({ data, dateLabel = 'Month' }: PnLTableProps) {
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Net Revenue</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">IVA</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Revenue ex-IVA</th>
+            <th className="text-right py-3 px-4 font-semibold text-zinc-600">COGS</th>
+            <th className="text-right py-3 px-4 font-semibold text-zinc-600">Gross Profit</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Ad Spend</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Orders</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">AOV</th>
           </tr>
         </thead>
         <tbody>
-          {totalsOnly.map((row, i) => (
-            <tr key={i} className="border-b border-zinc-100 hover:bg-zinc-50">
-              <td className="py-3 px-4 font-medium">{formatPeriod(row.month)}</td>
-              <td className="py-3 px-4 text-right">{formatCurrency(row.gross_revenue)}</td>
-              <td className="py-3 px-4 text-right text-rose-600">
-                {row.discounts > 0 ? `-${formatCurrency(row.discounts)}` : '-'}
-              </td>
-              <td className="py-3 px-4 text-right font-medium">{formatCurrency(row.net_revenue)}</td>
-              <td className="py-3 px-4 text-right text-zinc-500">{formatCurrency(row.iva_collected)}</td>
-              <td className="py-3 px-4 text-right">{formatCurrency(row.revenue_ex_iva)}</td>
-              <td className="py-3 px-4 text-right text-rose-600">
-                {row.meta_ad_spend > 0 ? formatCurrency(row.meta_ad_spend) : '-'}
-              </td>
-              <td className="py-3 px-4 text-right">{row.orders.toLocaleString()}</td>
-              <td className="py-3 px-4 text-right">{formatCurrency(row.aov)}</td>
-            </tr>
-          ))}
+          {totalsOnly.map((row, i) => {
+            const grossProfit = row.revenue_ex_iva - (row.cogs || 0)
+            return (
+              <tr key={i} className="border-b border-zinc-100 hover:bg-zinc-50">
+                <td className="py-3 px-4 font-medium">{formatPeriod(row.month)}</td>
+                <td className="py-3 px-4 text-right">{formatCurrency(row.gross_revenue)}</td>
+                <td className="py-3 px-4 text-right text-rose-600">
+                  {row.discounts > 0 ? `-${formatCurrency(row.discounts)}` : '-'}
+                </td>
+                <td className="py-3 px-4 text-right font-medium">{formatCurrency(row.net_revenue)}</td>
+                <td className="py-3 px-4 text-right text-zinc-500">{formatCurrency(row.iva_collected)}</td>
+                <td className="py-3 px-4 text-right">{formatCurrency(row.revenue_ex_iva)}</td>
+                <td className="py-3 px-4 text-right text-rose-600">
+                  {(row.cogs || 0) > 0 ? formatCurrency(row.cogs) : '-'}
+                </td>
+                <td className="py-3 px-4 text-right font-medium text-emerald-600">
+                  {formatCurrency(grossProfit)}
+                </td>
+                <td className="py-3 px-4 text-right text-rose-600">
+                  {row.meta_ad_spend > 0 ? formatCurrency(row.meta_ad_spend) : '-'}
+                </td>
+                <td className="py-3 px-4 text-right">{row.orders.toLocaleString()}</td>
+                <td className="py-3 px-4 text-right">{formatCurrency(row.aov)}</td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
