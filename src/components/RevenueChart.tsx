@@ -39,7 +39,27 @@ export function RevenueChart({ data }: RevenueChartProps) {
     .reverse()
 
   const labels = totals.map(row => {
-    const date = new Date(row.month)
+    const dateStr = row.month
+    // Handle quarterly format (2024-Q1)
+    if (dateStr.includes('-Q')) {
+      return dateStr
+    }
+    // Handle yearly format (2024)
+    if (/^\d{4}$/.test(dateStr)) {
+      return dateStr
+    }
+    // Handle daily/weekly format (2024-01-15)
+    if (dateStr.length === 10) {
+      const date = new Date(dateStr)
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+    // Handle monthly format (2024-01)
+    if (dateStr.length === 7) {
+      const date = new Date(dateStr + '-01')
+      return date.toLocaleDateString('en-US', { month: 'short' })
+    }
+    // Fallback
+    const date = new Date(dateStr)
     return date.toLocaleDateString('en-US', { month: 'short' })
   })
 

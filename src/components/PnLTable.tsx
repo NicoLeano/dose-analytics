@@ -2,9 +2,10 @@ import { MonthlyPnl } from '@/lib/queries'
 
 interface PnLTableProps {
   data: MonthlyPnl[]
+  dateLabel?: string
 }
 
-export function PnLTable({ data }: PnLTableProps) {
+export function PnLTable({ data, dateLabel = 'Month' }: PnLTableProps) {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -14,12 +15,31 @@ export function PnLTable({ data }: PnLTableProps) {
     }).format(value)
   }
 
-  const formatMonth = (dateStr: string) => {
+  const formatPeriod = (dateStr: string) => {
+    // Handle quarterly format (2024-Q1)
+    if (dateStr.includes('-Q')) {
+      return dateStr
+    }
+    // Handle yearly format (2024)
+    if (/^\d{4}$/.test(dateStr)) {
+      return dateStr
+    }
+    // Handle daily/weekly format (2024-01-15)
+    if (dateStr.length === 10) {
+      const date = new Date(dateStr)
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    }
+    // Handle monthly format (2024-01)
+    if (dateStr.length === 7) {
+      const date = new Date(dateStr + '-01')
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    }
+    // Fallback
     const date = new Date(dateStr)
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   }
 
-  // Group by month, showing totals
+  // Group by period, showing totals
   const totalsOnly = data.filter(row => row.platform === 'all_platforms')
 
   return (
@@ -27,7 +47,7 @@ export function PnLTable({ data }: PnLTableProps) {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-zinc-200">
-            <th className="text-left py-3 px-4 font-semibold text-zinc-600">Month</th>
+            <th className="text-left py-3 px-4 font-semibold text-zinc-600">{dateLabel}</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Gross Revenue</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Discounts</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Net Revenue</th>
@@ -41,7 +61,7 @@ export function PnLTable({ data }: PnLTableProps) {
         <tbody>
           {totalsOnly.map((row, i) => (
             <tr key={i} className="border-b border-zinc-100 hover:bg-zinc-50">
-              <td className="py-3 px-4 font-medium">{formatMonth(row.month)}</td>
+              <td className="py-3 px-4 font-medium">{formatPeriod(row.month)}</td>
               <td className="py-3 px-4 text-right">{formatCurrency(row.gross_revenue)}</td>
               <td className="py-3 px-4 text-right text-rose-600">
                 {row.discounts > 0 ? `-${formatCurrency(row.discounts)}` : '-'}
