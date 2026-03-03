@@ -208,7 +208,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
         iva_collected: iva,
         orders,
         meta_ad_spend: adSpend,
-        aov: orders > 0 ? net / orders : 0,
+        aov: orders > 0 ? gross / orders : 0,
       })
 
       totalGross += gross
@@ -230,7 +230,7 @@ export function aggregateToWeekly(dailyData: DailyPnl[]): MonthlyPnl[] {
       iva_collected: totalIva,
       orders: totalOrders,
       meta_ad_spend: totalAdSpend,
-      aov: totalOrders > 0 ? totalNet / totalOrders : 0,
+      aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
   })
 
@@ -280,7 +280,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
         iva_collected: iva,
         orders,
         meta_ad_spend: adSpend,
-        aov: orders > 0 ? net / orders : 0,
+        aov: orders > 0 ? gross / orders : 0,
       })
 
       totalGross += gross
@@ -302,7 +302,7 @@ export function aggregateToQuarterly(dailyData: DailyPnl[]): MonthlyPnl[] {
       iva_collected: totalIva,
       orders: totalOrders,
       meta_ad_spend: totalAdSpend,
-      aov: totalOrders > 0 ? totalNet / totalOrders : 0,
+      aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
   })
 
@@ -351,7 +351,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
         iva_collected: iva,
         orders,
         meta_ad_spend: adSpend,
-        aov: orders > 0 ? net / orders : 0,
+        aov: orders > 0 ? gross / orders : 0,
       })
 
       totalGross += gross
@@ -373,7 +373,7 @@ export function aggregateToYearly(dailyData: DailyPnl[]): MonthlyPnl[] {
       iva_collected: totalIva,
       orders: totalOrders,
       meta_ad_spend: totalAdSpend,
-      aov: totalOrders > 0 ? totalNet / totalOrders : 0,
+      aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
   })
 
@@ -407,7 +407,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
         iva_collected: row.iva_collected,
         orders: row.orders,
         meta_ad_spend: row.meta_ad_spend,
-        aov: row.orders > 0 ? row.net_revenue / row.orders : 0,
+        aov: row.orders > 0 ? row.gross_revenue / row.orders : 0,
       })
 
       totalGross += row.gross_revenue
@@ -429,7 +429,7 @@ export function dailyToMonthlyFormat(dailyData: DailyPnl[]): MonthlyPnl[] {
       iva_collected: totalIva,
       orders: totalOrders,
       meta_ad_spend: totalAdSpend,
-      aov: totalOrders > 0 ? totalNet / totalOrders : 0,
+      aov: totalOrders > 0 ? totalGross / totalOrders : 0,
     })
   })
 
