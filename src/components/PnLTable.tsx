@@ -50,6 +50,7 @@ export function PnLTable({ data, dateLabel = 'Month' }: PnLTableProps) {
             <th className="text-left py-3 px-4 font-semibold text-zinc-600">{dateLabel}</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Gross Revenue</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Discounts</th>
+            <th className="text-right py-3 px-4 font-semibold text-zinc-600">Returns</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Net Revenue</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">IVA</th>
             <th className="text-right py-3 px-4 font-semibold text-zinc-600">Revenue ex-IVA</th>
@@ -69,6 +70,9 @@ export function PnLTable({ data, dateLabel = 'Month' }: PnLTableProps) {
                 <td className="py-3 px-4 text-right">{formatCurrency(row.gross_revenue)}</td>
                 <td className="py-3 px-4 text-right text-rose-600">
                   {row.discounts > 0 ? `-${formatCurrency(row.discounts)}` : '-'}
+                </td>
+                <td className="py-3 px-4 text-right text-rose-600">
+                  {(row.returns || 0) > 0 ? `-${formatCurrency(row.returns)}` : '-'}
                 </td>
                 <td className="py-3 px-4 text-right font-medium">{formatCurrency(row.net_revenue)}</td>
                 <td className="py-3 px-4 text-right text-zinc-500">{formatCurrency(row.iva_collected)}</td>
