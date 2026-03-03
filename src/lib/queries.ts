@@ -44,6 +44,10 @@ export interface HaloCorrelation {
 
 // Query functions
 export async function getMonthlyPnl(months: number = 6): Promise<MonthlyPnl[]> {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
   const { data, error } = await supabase
     .from('fct_monthly_pnl')
     .select('*')
@@ -55,6 +59,10 @@ export async function getMonthlyPnl(months: number = 6): Promise<MonthlyPnl[]> {
 }
 
 export async function getCreativePerformance(limit: number = 20): Promise<CreativePerformance[]> {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
   const { data, error } = await supabase
     .from('fct_creative_performance')
     .select('*')
@@ -66,6 +74,10 @@ export async function getCreativePerformance(limit: number = 20): Promise<Creati
 }
 
 export async function getHaloCorrelations(): Promise<HaloCorrelation[]> {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
   const { data, error } = await supabase
     .from('fct_halo_correlations')
     .select('*')
@@ -76,6 +88,10 @@ export async function getHaloCorrelations(): Promise<HaloCorrelation[]> {
 }
 
 export async function getDailyPnl(days: number = 30) {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
   const { data, error } = await supabase
     .from('fct_daily_pnl')
     .select('*')
