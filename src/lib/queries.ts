@@ -545,3 +545,38 @@ export async function getDailyPnl(days: number = 30) {
   if (error) throw error
   return data || []
 }
+
+// Get P&L for a specific platform
+export async function getPlatformPnl(platform: string, months: number = 12): Promise<MonthlyPnl[]> {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
+  const { data, error } = await supabase
+    .from('fct_monthly_pnl')
+    .select('*')
+    .eq('platform', platform)
+    .order('month', { ascending: false })
+    .limit(months)
+
+  if (error) throw error
+  return data || []
+}
+
+// Get daily P&L for a specific platform
+export async function getPlatformDailyPnl(platform: string, range: DateRange): Promise<DailyPnl[]> {
+  if (!supabase) {
+    throw new Error('Supabase not configured')
+  }
+
+  const { data, error } = await supabase
+    .from('fct_daily_pnl')
+    .select('*')
+    .eq('platform', platform)
+    .gte('date', range.start)
+    .lte('date', range.end)
+    .order('date', { ascending: false })
+
+  if (error) throw error
+  return data || []
+}

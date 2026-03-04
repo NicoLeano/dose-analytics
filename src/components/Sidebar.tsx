@@ -10,6 +10,13 @@ const navigation = [
   { name: 'Halo Effect', href: '/halo', icon: TrendingIcon },
 ]
 
+const platformNav = [
+  { name: 'Shopify', href: '/pnl/shopify', color: 'bg-green-500' },
+  { name: 'Amazon', href: '/pnl/amazon', color: 'bg-orange-500' },
+  { name: 'MercadoLibre', href: '/pnl/mercadolibre', color: 'bg-yellow-500' },
+  { name: 'TikTok Shop', href: '/pnl/tiktok', color: 'bg-pink-500' },
+]
+
 function GridIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -44,6 +51,7 @@ function TrendingIcon({ className }: { className?: string }) {
 
 export function Sidebar() {
   const pathname = usePathname()
+  const isPnlSection = pathname.startsWith('/pnl')
 
   return (
     <aside className="w-56 bg-zinc-900 min-h-screen p-4 flex flex-col">
@@ -53,20 +61,45 @@ export function Sidebar() {
       <nav className="space-y-1 flex-1">
         {navigation.map((item) => {
           const isActive = pathname === item.href
+          const isPnlItem = item.href === '/pnl'
           return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`
-                flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
-                ${isActive
-                  ? 'bg-white/10 text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'}
-              `}
-            >
-              <item.icon className="w-5 h-5" />
-              {item.name}
-            </Link>
+            <div key={item.name}>
+              <Link
+                href={item.href}
+                className={`
+                  flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
+                  ${isActive || (isPnlItem && isPnlSection)
+                    ? 'bg-white/10 text-white'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/5'}
+                `}
+              >
+                <item.icon className="w-5 h-5" />
+                {item.name}
+              </Link>
+              {/* Platform sub-navigation under P&L */}
+              {isPnlItem && isPnlSection && (
+                <div className="ml-8 mt-1 space-y-1">
+                  {platformNav.map((platform) => {
+                    const isActivePlatform = pathname === platform.href
+                    return (
+                      <Link
+                        key={platform.name}
+                        href={platform.href}
+                        className={`
+                          flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors
+                          ${isActivePlatform
+                            ? 'bg-white/10 text-white'
+                            : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'}
+                        `}
+                      >
+                        <span className={`w-2 h-2 rounded-full ${platform.color}`} />
+                        {platform.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
           )
         })}
       </nav>
